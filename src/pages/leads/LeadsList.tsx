@@ -81,7 +81,7 @@ function LeadCard({ lead, navigate }: { lead: Lead; navigate: any }) {
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 space-y-3">
 
-            {/* 🔹 Line 1 — Name + Mobile + Icons */}
+            {/* 🔹 Line 1 — Name + Phone + Icons */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <h3 className="text-lg font-semibold text-foreground">
@@ -122,37 +122,40 @@ function LeadCard({ lead, navigate }: { lead: Lead; navigate: any }) {
               </div>
             </div>
 
-            {/* 🔹 Line 2 — Tech, Platform, LeadSource + Twisty on RIGHT */}
-            <div className="flex items-start justify-between">
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <span className="font-medium">{lead.technology}</span>
-                {lead.platform && <span>• {lead.platform}</span>}
-                <span>• {lead.leadSource}</span>
+            {/* 🔹 Line 2 — Tech + Platform + Lead Source */}
+            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+              <span className="font-medium">{lead.technology}</span>
+              {lead.platform && <span>• {lead.platform}</span>}
+              <span>• {lead.leadSource}</span>
+            </div>
+
+            {/* 🔹 Status Badges + "Description ▼" on Right */}
+            <div className="flex items-center justify-between">
+
+              {/* LEFT — Status badges */}
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-1 text-xs rounded-full bg-primary/10 text-primary">
+                  {lead.leadStatus}
+                </span>
+                <span className="px-2 py-1 text-xs rounded-full bg-secondary text-secondary-foreground">
+                  {lead.followupStatus}
+                </span>
+                <span className="px-2 py-1 text-xs rounded-full bg-muted text-muted-foreground">
+                  {lead.budget}
+                </span>
               </div>
 
-              {/* 🔽 Expand / Collapse Button */}
+              {/* RIGHT — Label + Twisty */}
               <button
                 onClick={() => setOpenDesc(!openDesc)}
-                className="text-gray-600 hover:text-black transition ml-3"
+                className="flex items-center gap-1 text-sm text-gray-600 hover:text-black transition ml-3"
               >
-                {openDesc ? <ChevronUp size={22} /> : <ChevronDown size={22} />}
+                <span>Description</span>
+                {openDesc ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
               </button>
             </div>
 
-            {/* 🔹 Status Badges */}
-            <div className="flex items-center gap-2">
-              <span className="px-2 py-1 text-xs rounded-full bg-primary/10 text-primary">
-                {lead.leadStatus}
-              </span>
-              <span className="px-2 py-1 text-xs rounded-full bg-secondary text-secondary-foreground">
-                {lead.followupStatus}
-              </span>
-              <span className="px-2 py-1 text-xs rounded-full bg-muted text-muted-foreground">
-                {lead.budget}
-              </span>
-            </div>
-
-            {/* 🔽 Description Collapse Area */}
+            {/* 🔽 Description Collapse */}
             {openDesc && (
               <div className="mt-3 p-3 bg-gray-50 border rounded-md text-sm text-gray-700 whitespace-pre-line">
                 {lead.description || 'No description provided.'}
@@ -160,7 +163,7 @@ function LeadCard({ lead, navigate }: { lead: Lead; navigate: any }) {
             )}
           </div>
 
-          {/* 🔹 Right-Side Action Buttons */}
+          {/* 🔹 Right-Side Actions */}
           <div className="flex items-center gap-2">
             <Button
               size="sm"
@@ -170,6 +173,7 @@ function LeadCard({ lead, navigate }: { lead: Lead; navigate: any }) {
               <Eye className="h-4 w-4 mr-2" />
               View
             </Button>
+
             <Button size="sm" onClick={() => navigate(`/leads/${lead.id}/edit`)}>
               <Edit className="h-4 w-4 mr-2" />
               Edit
