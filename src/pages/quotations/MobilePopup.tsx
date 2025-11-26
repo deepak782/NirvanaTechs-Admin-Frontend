@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useNavigate } from "react-router-dom";
+import { toast } from "@/components/ui/use-toast";
 
 interface Props {
   open: boolean;
@@ -33,7 +34,12 @@ export default function MobilePopup({ open, onClose, onSelect }: Props) {
 
       // ❌ No lead found → close modal + close quotation page
       if (!leads || leads.length === 0) {
-        setError("No lead found with this mobile number.");
+        // Show toast instead of modal error
+          toast({
+            title: "No Lead Found",
+            description: "Please add a Lead with this mobile number for creating Quotation.",
+            variant: "destructive",
+          });
 
         // Close popup
         onClose();
