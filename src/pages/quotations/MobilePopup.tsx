@@ -3,18 +3,26 @@ import { getLeadsByMobile } from "@/api/leads";
 import { Lead } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  onSelect: (lead: Lead) => void;   // 🔥 return full lead object
+  onSelect: (lead: Lead) => void;
 }
 
 export default function MobilePopup({ open, onClose, onSelect }: Props) {
   const [mobile, setMobile] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSearch = async () => {
     try {
@@ -23,16 +31,24 @@ export default function MobilePopup({ open, onClose, onSelect }: Props) {
 
       const leads = await getLeadsByMobile(mobile);
 
-      if (leads.length === 0) {
-        setError("No client found with this mobile number.");
+      // ❌ No lead found → close modal + close quotation page
+      if (!leads || leads.length === 0) {
+        setError("No lead found with this mobile number.");
+
+        // Close popup
+        onClose();
+
+        // Close "Create Quotation" page
+        navigate("/quotations");
+
         return;
       }
 
-      const lead = leads[0]; // pick first matched lead
-
-      // 🔥 Return the full lead including id, name, mobile
+      // ✔ Lead found → return the full object
+      const lead = leads[0];
       onSelect(lead);
 
+      // Close popup
       onClose();
     } catch (err) {
       setError("Failed to search. Try again.");
@@ -45,7 +61,7 @@ export default function MobilePopup({ open, onClose, onSelect }: Props) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Find Client by Mobile Number</DialogTitle>
+          <DialogTitle>Find Lead by Mobile Number</DialogTitle>
         </DialogHeader>
 
         <Input

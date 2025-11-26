@@ -93,7 +93,9 @@ export interface CreateQuotationDto {
   pdfUrl?: string;
 }
 
-export interface UpdateQuotationDto extends Partial<CreateQuotationDto> {}
+export interface UpdateQuotationDto extends Partial<CreateQuotationDto> {
+  pdfFile?: File | null;   // required for FormData upload
+}
 
 // Auth interfaces
 export interface LoginCredentials {
