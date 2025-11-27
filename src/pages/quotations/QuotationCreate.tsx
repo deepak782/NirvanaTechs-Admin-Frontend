@@ -673,7 +673,6 @@ const QuotationCreate = () => {
 
       return uploadQuotationPdf({
        leadId: leadId ? leadId : undefined, 
-        clientId: selectedClientId,    // optional now
         refNo: editableFields.refNo,
         subject: editableFields.subject,
         totalProjectInvestment: totalCost || undefined,

@@ -20,18 +20,18 @@ export default function EditQuotation() {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  // 1️⃣ Fetch quotation
+  // Fetch quotation
   const { data: quotation, isLoading } = useQuery({
     queryKey: ["quotation", id],
     queryFn: () => getQuotationById(id!),
   });
 
-  // 2️⃣ Local form state
+  // Local form state
   const [subject, setSubject] = useState("");
   const [status, setStatus] = useState<QuotationStatus>(QuotationStatus.SENT);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
 
-  // 3️⃣ Update mutation using FormData
+  // Mutation
   const mutation = useMutation({
     mutationFn: async () => {
       const formData = new FormData();
@@ -48,24 +48,20 @@ export default function EditQuotation() {
     },
 
     onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "Quotation updated successfully",
-      });
+      toast({ title: "Success", description: "Quotation updated successfully" });
       navigate("/quotations");
     },
 
     onError: (error: any) => {
       toast({
         title: "Error",
-        description:
-          error.response?.data?.message || "Failed to update quotation",
+        description: error.response?.data?.message || "Failed to update quotation",
         variant: "destructive",
       });
     },
   });
 
-  // 4️⃣ Populate local state once quotation loads
+  // Populate state
   useEffect(() => {
     if (quotation) {
       setSubject(quotation.subject);
@@ -73,26 +69,20 @@ export default function EditQuotation() {
     }
   }, [quotation]);
 
-  // 5️⃣ Before rendering UI
-  if (isLoading || !quotation) {
-    return <p className="p-6">Loading quotation...</p>;
-  }
+  if (isLoading || !quotation) return <p className="p-6">Loading...</p>;
 
   const isApproved = quotation.status === "APPROVED";
 
-  const pdfViewerUrl = quotation.pdfUrl
-    ? `${import.meta.env.VITE_API_URL}${quotation.pdfUrl}`
-    : null;
+  // ⛔ IMPORTANT: pdfUrl is FULL R2 URL already
+  const pdfViewerUrl = quotation.pdfUrl || null;
 
-  // 6️⃣ UI
   return (
     <div className="max-w-4xl mx-auto py-8">
       <h1 className="text-3xl font-bold">Edit Quotation</h1>
       <p className="text-muted-foreground mb-6">Update quotation details</p>
 
       <div className="bg-white p-6 rounded-lg shadow-sm space-y-6">
-        {/* SUBJECT */}
-        <div className="space-y-2">
+        <div>
           <Label>Subject *</Label>
           <Input
             disabled={isApproved}
@@ -101,8 +91,7 @@ export default function EditQuotation() {
           />
         </div>
 
-        {/* STATUS */}
-        <div className="space-y-2">
+        <div>
           <Label>Status *</Label>
           <Select
             disabled={isApproved}
@@ -110,7 +99,7 @@ export default function EditQuotation() {
             onValueChange={(v) => setStatus(v as QuotationStatus)}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select status" />
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="DRAFT">DRAFT</SelectItem>
@@ -120,7 +109,7 @@ export default function EditQuotation() {
           </Select>
         </div>
 
-        {/* PDF VIEWER */}
+        {/* PDF Viewer */}
         {pdfViewerUrl && (
           <div>
             <Label>Current PDF</Label>
@@ -131,9 +120,9 @@ export default function EditQuotation() {
           </div>
         )}
 
-        {/* PDF upload (only when NOT approved) */}
+        {/* Upload file if NOT approved */}
         {!isApproved && (
-          <div className="space-y-2">
+          <div>
             <Label>Upload New PDF (Optional)</Label>
             <Input
               type="file"
@@ -143,18 +132,16 @@ export default function EditQuotation() {
           </div>
         )}
 
-        {/* BUTTONS */}
         <div className="flex justify-end gap-4 pt-4">
           <Button variant="outline" onClick={() => navigate("/quotations")}>
             Cancel
           </Button>
 
-          <Button
-            disabled={isApproved || mutation.isPending}
-            onClick={() => mutation.mutate()}
-          >
-            {mutation.isPending ? "Updating..." : "Update Quotation"}
-          </Button>
+          {!isApproved && (
+            <Button onClick={() => mutation.mutate()}>
+              {mutation.isPending ? "Updating..." : "Update Quotation"}
+            </Button>
+          )}
         </div>
       </div>
     </div>

@@ -7,21 +7,27 @@ const api = axios.create({
   },
 });
 
-// Request interceptor to add JWT token
+// Request interceptor to add JWT token and handle absolute R2 URLs
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
+
+    // ⭐ If URL is absolute (R2 PDF), disable baseURL
+    const isAbsoluteUrl = /^https?:\/\//i.test(config.url || "");
+    if (isAbsoluteUrl) {
+      config.baseURL = "";
+    }
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Response interceptor to handle 401 errors
+// Response interceptor (401 auto logout)
 api.interceptors.response.use(
   (response) => response,
   (error) => {

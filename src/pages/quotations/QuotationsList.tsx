@@ -1,7 +1,7 @@
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Plus, Eye, Edit, Trash2, Download } from 'lucide-react';
+import { Plus, Edit, Trash2, Download, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getQuotations, deleteQuotation } from '@/api/quotations';
@@ -49,17 +49,17 @@ export default function QuotationsList() {
   });
 
   const formatDate = (dateString?: string) => {
-  if (!dateString) return '-';
+    if (!dateString) return '-';
 
-  return new Date(dateString).toLocaleString('en-US', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true,
-  });
-};
+    return new Date(dateString).toLocaleString('en-US', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -68,9 +68,7 @@ export default function QuotationsList() {
       case 'SENT':
         return 'bg-primary/10 text-primary';
       case 'APPROVED':
-        return 'bg-success/10 text-success';
-      case 'REJECTED':
-        return 'bg-destructive/10 text-destructive';
+        return 'bg-green-100 text-green-600';
       default:
         return 'bg-muted text-muted-foreground';
     }
@@ -116,40 +114,56 @@ export default function QuotationsList() {
                       <th className="text-left p-4 font-medium text-muted-foreground">Ref No</th>
                       <th className="text-left p-4 font-medium text-muted-foreground">Client Name</th>
                       <th className="text-left p-4 font-medium text-muted-foreground">Mobile</th>
-                      <th className="text-left p-4 font-medium text-muted-foreground">Technology</th>
+                      <th className="text-left p-4 font-medium text-muted-foreground">Tech</th>
                       <th className="text-left p-4 font-medium text-muted-foreground">Subject</th>
                       <th className="text-left p-4 font-medium text-muted-foreground">Status</th>
                       <th className="text-left p-4 font-medium text-muted-foreground">Date</th>
                       <th className="text-right p-4 font-medium text-muted-foreground">Actions</th>
                     </tr>
                   </thead>
+
                   <tbody>
                     {quotations.map((quotation) => (
-                      <tr key={quotation.id} className="border-b border-border hover:bg-muted/30">
+                      <tr
+                        key={quotation.id}
+                        className="border-b border-border hover:bg-muted/30"
+                      >
                         <td className="p-4 font-medium">{quotation.refNo}</td>
                         <td className="p-4">{quotation.lead?.name || '-'}</td>
                         <td className="p-4">{quotation.lead?.mobile || '-'}</td>
                         <td className="p-4">{quotation.lead?.technology || '-'}</td>
                         <td className="p-4">{quotation.subject}</td>
+
                         <td className="p-4">
                           <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(quotation.status)}`}>
                             {quotation.status}
                           </span>
                         </td>
+
                         <td className="p-4 text-muted-foreground">{formatDate(quotation.createdAt)}</td>
+
                         <td className="p-4">
                           <div className="flex items-center justify-end gap-2">
+
+                            {/* PDF View */}
                             {quotation.pdfUrl && (
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                asChild
-                              >
-                                <a href={`${import.meta.env.VITE_API_BASE_URL}${quotation.pdfUrl}`} target="_blank" rel="noopener noreferrer">
-                                  <Download className="h-4 w-4" />
-                                </a>
-                              </Button>
+                              <>
+                                <Button size="sm" variant="ghost" asChild>
+                                  <a href={quotation.pdfUrl} target="_blank" rel="noopener noreferrer">
+                                    <FileText className="h-4 w-4" />
+                                  </a>
+                                </Button>
+
+                                {/* PDF Download */}
+                                <Button size="sm" variant="ghost" asChild>
+                                  <a href={quotation.pdfUrl} download target="_blank" rel="noopener noreferrer">
+                                    <Download className="h-4 w-4" />
+                                  </a>
+                                </Button>
+                              </>
                             )}
+
+                            {/* Edit */}
                             <Button
                               size="sm"
                               variant="ghost"
@@ -157,6 +171,8 @@ export default function QuotationsList() {
                             >
                               <Edit className="h-4 w-4" />
                             </Button>
+
+                            {/* Delete */}
                             <Button
                               size="sm"
                               variant="ghost"
@@ -165,6 +181,7 @@ export default function QuotationsList() {
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
+
                           </div>
                         </td>
                       </tr>

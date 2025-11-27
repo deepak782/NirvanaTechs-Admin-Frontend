@@ -58,7 +58,7 @@ export default function EditLead() {
     leadSource: '',
     followupStatus: FollowupStatus.PENDING,
     followupDate: '',
-    budget: LeadBudget.BELOW_50K,
+    budget: LeadBudget.LT_1_LAKH,
     leadStatus: LeadStatus.NEW,
     description: '',
   });
