@@ -26,6 +26,50 @@ export enum QuotationStatus {
   APPROVED = "APPROVED",
 }
 
+export enum ProjectStatus {
+
+  NOT_STARTED = "NOT_STARTED",
+
+  IN_PROGRESS = "IN_PROGRESS",
+
+  ON_HOLD = "ON_HOLD",
+
+  COMPLETED = "COMPLETED",
+
+  CANCELLED = "CANCELLED"
+
+}
+
+
+
+export enum PaymentStatus {
+
+  PAID = "PAID",
+
+  PENDING = "PENDING",
+
+  FAILED = "FAILED",
+
+  REFUNDED = "REFUNDED"
+
+}
+
+
+
+export enum PaymentMethod {
+
+  CASH = "CASH",
+
+  UPI = "UPI",
+
+  BANK_TRANSFER = "BANK_TRANSFER",
+
+  CARD = "CARD",
+
+  OTHER = "OTHER"
+
+}
+
 // Lead interfaces
 export interface Lead {
   id: string;
@@ -117,3 +161,171 @@ export interface User {
   email: string;
   name: string;
 }
+
+// Followup interfaces
+
+export interface Followup {
+
+  id: string;
+
+  leadId: string;
+
+  mobile: string;
+
+  name: string;
+
+  technology?: string;
+
+  followupDate: string;
+
+  status: FollowupStatus;
+
+  notes?: string;
+
+  nextFollowupDate?: string | null;
+
+  createdAt: string;
+
+  updatedAt: string;
+
+}
+
+
+
+export interface CreateFollowupDto {
+
+  leadId: string;
+
+  followupDate: string;
+
+  status: FollowupStatus;
+
+  notes?: string;
+
+  nextFollowupDate?: string;
+
+}
+
+
+
+export interface UpdateFollowupDto extends Partial<CreateFollowupDto> {}
+
+
+
+// Project interfaces
+
+export interface Project {
+
+  id: string;
+
+  name: string;
+
+  leadId: string;
+
+  mobile: string;
+
+  clientName: string;
+
+  technology?: string;
+
+  startDate?: string | null;
+
+  endDate?: string | null;
+
+  status: ProjectStatus;
+
+  totalAmount: number;
+
+  description?: string;
+
+  createdAt: string;
+
+  updatedAt: string;
+
+  amountReceived?: number;
+
+  balanceAmount?: number;
+
+}
+
+
+
+export interface CreateProjectDto {
+
+  name: string;
+
+  leadId: string;
+
+  startDate?: string;
+
+  endDate?: string;
+
+  status: ProjectStatus;
+
+  totalAmount: number;
+
+  description?: string;
+
+}
+
+
+
+export interface UpdateProjectDto extends Partial<CreateProjectDto> {}
+
+
+
+// Payment interfaces
+
+export interface Payment {
+
+  id: string;
+
+  projectId: string;
+
+  projectName: string;
+
+  clientName: string;
+
+  mobile: string;
+
+  date: string;
+
+  amount: number;
+
+  method: PaymentMethod;
+
+  status: PaymentStatus;
+
+  reference?: string;
+
+  notes?: string;
+
+  createdAt: string;
+
+  updatedAt: string;
+
+}
+
+
+
+export interface CreatePaymentDto {
+
+  projectId: string;
+
+  date: string;
+
+  amount: number;
+
+  method: PaymentMethod;
+
+  status: PaymentStatus;
+
+  reference?: string;
+
+  notes?: string;
+
+}
+
+
+
+export interface UpdatePaymentDto extends Partial<CreatePaymentDto> {}

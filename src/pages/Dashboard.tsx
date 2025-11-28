@@ -1,9 +1,12 @@
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, FileText, TrendingUp, Clock } from 'lucide-react';
+import { Users, FileText, TrendingUp, Clock, Briefcase, DollarSign } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { getLeads } from '@/api/leads';
 import { getQuotations } from '@/api/quotations';
+import { getFollowups } from '@/api/followups';
+import { getProjects } from '@/api/projects';
+import { getPayments } from '@/api/payments';
 
 export default function Dashboard() {
   const { data: leads = [] } = useQuery({
@@ -15,6 +18,24 @@ export default function Dashboard() {
     queryKey: ['quotations'],
     queryFn: getQuotations,
   });
+
+  const { data: followups = [] } = useQuery({
+    queryKey: ['followups'],
+    queryFn: getFollowups,
+  });
+
+  const { data: projects = [] } = useQuery({
+    queryKey: ['projects'],
+    queryFn: getProjects,
+  });
+
+  const { data: payments = [] } = useQuery({
+    queryKey: ['payments'],
+    queryFn: getPayments,
+  });
+
+  const totalRevenue = payments.filter(p => p.status === 'PAID').reduce((sum, p) => sum + p.amount, 0);
+  const activeProjects = projects.filter(p => p.status === 'IN_PROGRESS').length;
 
   const stats = [
     {
@@ -32,18 +53,32 @@ export default function Dashboard() {
       bgColor: 'bg-accent/10',
     },
     {
-      title: 'Active Requirements',
-      value: leads.filter(l => l.leadStatus !== 'WON' && l.leadStatus !== 'LOST').length,
-      icon: TrendingUp,
+      title: 'Pending Follow-ups',
+      value: followups.filter(f => f.status === 'PENDING').length,
+      icon: Clock,
+      color: 'text-warning',
+      bgColor: 'bg-warning/10',
+    },
+    {
+      title: 'Active Projects',
+      value: activeProjects,
+      icon: Briefcase,
       color: 'text-success',
       bgColor: 'bg-success/10',
     },
     {
-      title: 'Pending Followups',
-      value: leads.filter(l => l.followupStatus === 'PENDING').length,
-      icon: Clock,
-      color: 'text-warning',
-      bgColor: 'bg-warning/10',
+      title: 'Total Payments',
+      value: payments.length,
+      icon: DollarSign,
+      color: 'text-muted-foreground',
+      bgColor: 'bg-muted',
+    },
+    {
+      title: 'Revenue Received',
+      value: `₹${totalRevenue.toLocaleString('en-IN')}`,
+      icon: TrendingUp,
+      color: 'text-primary',
+      bgColor: 'bg-primary/10',
     },
   ];
 

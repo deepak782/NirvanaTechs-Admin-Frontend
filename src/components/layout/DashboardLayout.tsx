@@ -6,7 +6,10 @@ import {
   FileText, 
   LogOut,
   Menu,
-  X 
+  X,
+  Calendar,
+  Briefcase,
+  DollarSign
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -21,6 +24,9 @@ const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
   { icon: Users, label: 'Leads', path: '/leads' },
   { icon: FileText, label: 'Quotations', path: '/quotations' },
+  { icon: Calendar, label: 'Follow-ups', path: '/followups' },
+  { icon: Briefcase, label: 'Projects', path: '/projects' },
+  { icon: DollarSign, label: 'Payments', path: '/payments' }, 
 ];
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {

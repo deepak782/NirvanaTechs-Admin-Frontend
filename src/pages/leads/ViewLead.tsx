@@ -205,6 +205,25 @@ export default function ViewLead() {
             </CardContent>
           </Card>
         </div>
+         <div className="flex gap-4">
+
+          <Button onClick={() => navigate(`/projects/create?leadId=${id}`)}>
+
+            <Plus className="h-4 w-4 mr-2" />
+
+            Create Project
+
+          </Button>
+
+          <Button onClick={() => navigate(`/followups/create?leadId=${id}`)} variant="outline">
+
+            <Plus className="h-4 w-4 mr-2" />
+
+            Add Follow-up
+
+          </Button>
+
+        </div>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">

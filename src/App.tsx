@@ -14,6 +14,21 @@ import QuotationsList from "./pages/quotations/QuotationsList";
 import QuotationCreate from "./pages/quotations/QuotationCreate";
 import EditQuotation from "./pages/quotations/EditQuotation";
 import NotFound from "./pages/NotFound";
+import FollowupsList from "./pages/followups/FollowupsList";
+
+import CreateFollowup from "./pages/followups/CreateFollowup";
+
+import EditFollowup from "./pages/followups/EditFollowup";
+
+import ProjectsList from "./pages/projects/ProjectsList";
+
+import CreateProject from "./pages/projects/CreateProject";
+
+import ProjectDetail from "./pages/projects/ProjectDetail";
+
+import EditProject from "./pages/projects/EditProject";
+
+import PaymentsList from "./pages/payments/PaymentsList";
 
 const queryClient = new QueryClient();
 
@@ -89,6 +104,133 @@ const App = () => (
                 <EditQuotation />
               </ProtectedRoute>
             }
+            />
+           <Route
+
+            path="/followups"
+
+            element={
+
+              <ProtectedRoute>
+
+                <FollowupsList />
+
+              </ProtectedRoute>
+
+            }
+
+          />
+
+          <Route
+
+            path="/followups/create"
+
+            element={
+
+              <ProtectedRoute>
+
+                <CreateFollowup />
+
+              </ProtectedRoute>
+
+            }
+
+          />
+
+          <Route
+
+            path="/followups/:id/edit"
+
+            element={
+
+              <ProtectedRoute>
+
+                <EditFollowup />
+
+              </ProtectedRoute>
+
+            }
+
+          />
+
+          <Route
+
+            path="/projects"
+
+            element={
+
+              <ProtectedRoute>
+
+                < ProjectsList/>
+
+              </ProtectedRoute>
+
+            }
+
+          />
+
+          <Route
+
+            path="/projects/create"
+
+            element={
+
+              <ProtectedRoute>
+
+                <CreateProject />
+
+              </ProtectedRoute>
+
+            }
+
+          />
+
+          <Route
+
+            path="/projects/:id"
+
+            element={
+
+              <ProtectedRoute>
+
+                <ProjectDetail />
+
+              </ProtectedRoute>
+
+            }
+
+          />
+
+          <Route
+
+            path="/projects/:id/edit"
+
+            element={
+
+              <ProtectedRoute>
+
+                <EditProject />
+
+              </ProtectedRoute>
+
+            }
+
+          />
+
+          <Route
+
+            path="/payments"
+
+            element={
+
+              <ProtectedRoute>
+
+                <PaymentsList />
+
+              </ProtectedRoute>
+
+            }
+
           />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
